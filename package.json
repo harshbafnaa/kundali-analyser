@@ -1,0 +1,16 @@
+{
+  "name": "jyotish-darshan-kundli-analyser",
+  "version": "1.0.0",
+  "description": "Vedic Kundli Analyser powered by Claude API — Jyotish Darshan",
+  "private": true,
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "dev": "vercel dev",
+    "deploy": "vercel --prod"
+  },
+  "devDependencies": {
+    "vercel": "^37.0.0"
+  }
+}
