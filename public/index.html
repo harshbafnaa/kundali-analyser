@@ -19,7 +19,6 @@
     --muted:   #8A8FA8;
     --border:  rgba(201,146,42,0.25);
     --glow:    rgba(232,146,26,0.12);
-    --green:   #2D6A4F;
   }
 
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -32,278 +31,199 @@
     overflow-x: hidden;
   }
 
-  /* ── MANDALA BACKGROUND ── */
+  /* ── MANDALA ── */
   .mandala-bg {
     position: fixed; top: 50%; left: 50%;
     transform: translate(-50%, -50%);
     width: 700px; height: 700px;
     opacity: 0.045;
-    animation: spin 90s linear infinite;
+    animation: rotateMandala 90s linear infinite;
     pointer-events: none; z-index: 0;
   }
-  @keyframes spin { to { transform: translate(-50%,-50%) rotate(360deg); } }
+  @keyframes rotateMandala { to { transform: translate(-50%,-50%) rotate(360deg); } }
 
-  /* ── LAYOUT ── */
-  .page { position: relative; z-index: 1; max-width: 860px; margin: 0 auto; padding: 0 24px 80px; }
+  .page { position: relative; z-index: 1; max-width: 760px; margin: 0 auto; padding: 0 24px 80px; }
 
   /* ── HEADER ── */
-  header {
-    text-align: center; padding: 52px 0 36px;
-    border-bottom: 1px solid var(--border);
-    margin-bottom: 40px;
-  }
-  .header-eyebrow {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 11px; letter-spacing: 0.22em;
-    color: var(--saffron); text-transform: uppercase; margin-bottom: 14px;
+  header { text-align: center; padding: 52px 0 36px; border-bottom: 1px solid var(--border); margin-bottom: 36px; }
+  .eyebrow {
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    letter-spacing: 0.22em; color: var(--saffron);
+    text-transform: uppercase; margin-bottom: 14px;
   }
   header h1 {
     font-family: 'Playfair Display', serif;
-    font-size: clamp(28px, 5vw, 46px);
-    font-weight: 700; line-height: 1.15;
-    color: var(--ivory);
+    font-size: clamp(28px, 5vw, 48px); font-weight: 700; line-height: 1.1;
   }
-  header h1 span { color: var(--saffron); font-style: italic; }
-  header p {
-    margin-top: 12px; font-size: 14px; color: var(--muted);
-    max-width: 520px; margin-inline: auto; line-height: 1.65;
-  }
+  header h1 em { color: var(--saffron); font-style: italic; }
+  header p { margin-top: 12px; font-size: 14px; color: var(--muted); line-height: 1.65; max-width: 480px; margin-inline: auto; }
 
-  /* ── API STATUS BANNER ── */
-  .api-status {
-    background: var(--navy2);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 14px 20px;
-    margin-bottom: 28px;
-    display: flex; gap: 12px; align-items: center;
-    font-size: 13px;
+  /* ── STATUS BANNER ── */
+  .status-bar {
+    display: flex; align-items: center; gap: 10px;
+    background: var(--navy2); border: 1px solid var(--border);
+    border-radius: 8px; padding: 12px 18px; margin-bottom: 28px;
+    font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--muted);
   }
-  .api-status .dot {
-    width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
-    background: var(--saffron);
-    animation: pulse 2s ease-in-out infinite;
-  }
-  .api-status .dot.ready { background: #52B788; animation: none; }
-  .api-status .dot.error { background: #E07080; animation: none; }
-  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
-  .api-status-text { color: var(--muted); font-family: 'JetBrains Mono', monospace; font-size: 12px; }
-  .api-status-text strong { color: var(--ivory2); }
+  .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--saffron); flex-shrink: 0; animation: blink 2s ease-in-out infinite; }
+  .dot.ok  { background: #52B788; animation: none; }
+  .dot.err { background: #E07080; animation: none; }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
 
-  /* ── FORM ── */
-  .form-card {
-    background: var(--navy2);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 32px;
-    margin-bottom: 28px;
+  /* ── UPLOAD ZONE ── */
+  .upload-card {
+    background: var(--navy2); border: 1px solid var(--border);
+    border-radius: 14px; padding: 36px 32px; margin-bottom: 24px;
   }
-  .form-title {
-    font-family: 'Playfair Display', serif;
-    font-size: 18px; color: var(--gold2);
-    margin-bottom: 24px;
-    padding-bottom: 14px; border-bottom: 1px solid var(--border);
+  .upload-zone {
+    border: 2px dashed var(--border); border-radius: 10px;
+    padding: 52px 24px; text-align: center; cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+    position: relative;
   }
-  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-  .form-group { display: flex; flex-direction: column; gap: 6px; }
-  .form-group.full { grid-column: 1 / -1; }
-  .form-group label {
-    font-size: 11px; font-weight: 500; letter-spacing: 0.08em;
-    text-transform: uppercase; color: var(--muted);
-    font-family: 'JetBrains Mono', monospace;
-  }
-  .form-group input, .form-group select, .form-group textarea {
+  .upload-zone:hover, .upload-zone.drag { border-color: var(--saffron); background: var(--glow); }
+  .upload-zone input[type="file"] { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
+  .upload-icon { font-size: 40px; margin-bottom: 14px; }
+  .upload-zone h3 { font-family: 'Playfair Display', serif; font-size: 18px; color: var(--gold2); margin-bottom: 8px; }
+  .upload-zone p { font-size: 13px; color: var(--muted); line-height: 1.5; }
+  .upload-zone .hint { margin-top: 10px; font-size: 11px; font-family: 'JetBrains Mono', monospace; color: var(--saffron); letter-spacing: 0.06em; }
+
+  /* ── FILE PREVIEW ── */
+  .file-preview {
+    display: none; margin-top: 18px;
     background: var(--navy3); border: 1px solid var(--border);
-    border-radius: 7px; padding: 10px 14px;
-    color: var(--ivory); font-family: 'Inter', sans-serif;
-    font-size: 14px; outline: none; transition: border-color 0.2s;
-    width: 100%;
+    border-radius: 8px; padding: 14px 18px;
+    display: none; align-items: center; gap: 14px;
   }
-  .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
-    border-color: var(--saffron);
-    box-shadow: 0 0 0 3px var(--glow);
+  .file-preview.visible { display: flex; }
+  .file-icon { font-size: 28px; }
+  .file-info { flex: 1; }
+  .file-name { font-size: 14px; color: var(--ivory); font-weight: 500; word-break: break-all; }
+  .file-size { font-size: 11px; color: var(--muted); font-family: 'JetBrains Mono', monospace; margin-top: 2px; }
+  .file-remove {
+    background: none; border: 1px solid var(--border); border-radius: 6px;
+    color: var(--muted); padding: 6px 12px; cursor: pointer; font-size: 12px;
+    transition: color 0.2s, border-color 0.2s; white-space: nowrap;
   }
-  .form-group select { cursor: pointer; }
-  .form-group select option { background: var(--navy2); }
-  .form-group textarea { resize: vertical; min-height: 90px; font-size: 13px; }
-
-  /* ── PLANET TABLE ── */
-  .section-label {
-    font-family: 'Playfair Display', serif;
-    font-size: 16px; color: var(--gold2);
-    margin: 28px 0 14px;
-  }
-  .planet-table-wrap { overflow-x: auto; border-radius: 8px; border: 1px solid var(--border); }
-  table {
-    width: 100%; border-collapse: collapse;
-    font-size: 12px; font-family: 'JetBrains Mono', monospace;
-  }
-  table thead tr { background: var(--navy3); }
-  table th {
-    padding: 10px 10px; text-align: left;
-    color: var(--saffron); font-size: 10px;
-    letter-spacing: 0.12em; text-transform: uppercase;
-    border-bottom: 1px solid var(--border);
-    white-space: nowrap;
-  }
-  table tbody tr { border-bottom: 1px solid rgba(201,146,42,0.1); }
-  table tbody tr:last-child { border-bottom: none; }
-  table td { padding: 9px 10px; color: var(--ivory2); vertical-align: middle; }
-  table td input {
-    background: transparent; border: none; outline: none;
-    color: var(--ivory); font-family: 'JetBrains Mono', monospace;
-    font-size: 12px; width: 100%; min-width: 60px;
-  }
-  table td input:focus { color: var(--gold2); }
-
-  /* ── BASIC DETAILS ── */
-  .details-grid {
-    display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-    gap: 12px;
-  }
-  .detail-cell {
-    background: var(--navy3); border: 1px solid var(--border);
-    border-radius: 7px; padding: 12px 14px;
-  }
-  .detail-cell label {
-    font-size: 10px; font-family: 'JetBrains Mono', monospace;
-    color: var(--muted); letter-spacing: 0.1em;
-    text-transform: uppercase; display: block; margin-bottom: 5px;
-  }
-  .detail-cell input {
-    background: transparent; border: none; outline: none;
-    color: var(--ivory); font-size: 13px; width: 100%;
-    font-family: 'Inter', sans-serif;
-  }
-  .detail-cell input:focus { color: var(--gold2); }
-
-  /* ── DASHA ── */
-  .dasha-row { display: flex; gap: 12px; flex-wrap: wrap; }
-  .dasha-group { flex: 1; min-width: 140px; }
-  .dasha-group label {
-    font-size: 10px; font-family: 'JetBrains Mono', monospace;
-    color: var(--muted); letter-spacing: 0.1em;
-    text-transform: uppercase; display: block; margin-bottom: 6px;
-  }
+  .file-remove:hover { color: #E07080; border-color: #6B2040; }
 
   /* ── QUESTION ── */
   .question-card {
     background: var(--navy2); border: 1px solid var(--border);
-    border-radius: 12px; padding: 24px 32px; margin-bottom: 28px;
+    border-radius: 14px; padding: 26px 32px; margin-bottom: 24px;
   }
-  .question-card textarea {
-    background: var(--navy3); border: 1px solid var(--border);
-    border-radius: 7px; padding: 12px 16px;
-    color: var(--ivory); font-family: 'Inter', sans-serif;
-    font-size: 14px; outline: none; width: 100%; min-height: 80px;
-    resize: vertical; transition: border-color 0.2s;
+  .card-label {
+    font-family: 'Playfair Display', serif; font-size: 16px; color: var(--gold2); margin-bottom: 14px;
   }
-  .question-card textarea:focus { border-color: var(--saffron); }
+  .card-label span { font-family: 'Inter', sans-serif; font-size: 12px; color: var(--muted); font-weight: 400; }
+  textarea {
+    width: 100%; background: var(--navy3); border: 1px solid var(--border);
+    border-radius: 8px; padding: 12px 16px; color: var(--ivory);
+    font-family: 'Inter', sans-serif; font-size: 14px; line-height: 1.6;
+    outline: none; resize: vertical; min-height: 80px; transition: border-color 0.2s;
+  }
+  textarea:focus { border-color: var(--saffron); box-shadow: 0 0 0 3px var(--glow); }
+  textarea::placeholder { color: var(--muted); }
 
-  /* ── ANALYSE BUTTON ── */
+  /* ── WHAT'S INSIDE ── */
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+  .chip {
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    letter-spacing: 0.06em; color: var(--gold); background: var(--glow);
+    border: 1px solid var(--border); border-radius: 4px; padding: 4px 10px;
+  }
+
+  /* ── BUTTON ── */
   .btn-analyse {
     width: 100%;
-    background: linear-gradient(135deg, var(--saffron) 0%, var(--gold) 100%);
+    background: linear-gradient(135deg, var(--saffron), var(--gold));
     color: var(--navy); font-family: 'Playfair Display', serif;
-    font-size: 17px; font-weight: 700; letter-spacing: 0.04em;
-    border: none; border-radius: 10px;
-    padding: 18px 32px; cursor: pointer;
-    transition: opacity 0.2s, transform 0.15s;
-    margin-bottom: 32px;
+    font-size: 17px; font-weight: 700; letter-spacing: 0.03em;
+    border: none; border-radius: 10px; padding: 18px;
+    cursor: pointer; transition: opacity 0.2s, transform 0.15s;
+    margin-bottom: 28px;
   }
-  .btn-analyse:hover:not(:disabled) { opacity: 0.9; transform: translateY(-1px); }
-  .btn-analyse:disabled { opacity: 0.45; cursor: not-allowed; transform: none; }
-
-  /* ── LOADING ── */
-  .loading {
-    display: none; text-align: center; padding: 40px 20px;
-    border: 1px solid var(--border); border-radius: 12px;
-    background: var(--navy2); margin-bottom: 28px;
-  }
-  .loading.visible { display: block; }
-  .loading-spinner {
-    width: 48px; height: 48px; margin: 0 auto 20px;
-    border: 3px solid var(--border);
-    border-top-color: var(--saffron);
-    border-radius: 50%;
-    animation: spin2 0.9s linear infinite;
-  }
-  @keyframes spin2 { to { transform: rotate(360deg); } }
-  .loading p { color: var(--muted); font-size: 14px; line-height: 1.6; }
-  .loading-step {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 11px; color: var(--saffron); letter-spacing: 0.1em;
-    margin-top: 10px;
-  }
-
-  /* ── RESULT ── */
-  .result-card {
-    display: none; background: var(--navy2);
-    border: 1px solid var(--border); border-radius: 12px;
-    overflow: hidden;
-  }
-  .result-card.visible { display: block; }
-  .result-header {
-    background: linear-gradient(135deg, var(--burg) 0%, #2A0D1F 100%);
-    border-bottom: 1px solid var(--border);
-    padding: 20px 28px; display: flex; align-items: center; gap: 14px;
-  }
-  .result-header .result-icon { font-size: 24px; }
-  .result-header h2 { font-family: 'Playfair Display', serif; font-size: 18px; color: var(--gold2); }
-  .result-header p { font-size: 12px; color: var(--muted); margin-top: 3px; }
-  .result-body { padding: 28px; }
-
-  /* ── ANALYSIS SECTIONS ── */
-  .analysis-block { margin-bottom: 28px; }
-  .analysis-block:last-child { margin-bottom: 0; }
-  .analysis-block-title {
-    font-family: 'Playfair Display', serif;
-    font-size: 15px; color: var(--saffron);
-    margin-bottom: 10px; padding-bottom: 8px;
-    border-bottom: 1px solid var(--border);
-    display: flex; align-items: center; gap: 8px;
-  }
-  .analysis-block-title .badge {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 10px; background: var(--glow);
-    border: 1px solid var(--border); border-radius: 4px;
-    padding: 2px 7px; color: var(--gold);
-    letter-spacing: 0.08em;
-  }
-  .analysis-content {
-    font-size: 14px; line-height: 1.85; color: var(--ivory2);
-    white-space: pre-wrap;
-  }
-  .analysis-content strong { color: var(--ivory); font-weight: 600; }
+  .btn-analyse:hover:not(:disabled) { opacity: 0.88; transform: translateY(-1px); }
+  .btn-analyse:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
 
   /* ── ERROR ── */
   .error-card {
     display: none; background: #1A0810; border: 1px solid #6B2040;
-    border-radius: 10px; padding: 20px 24px; margin-bottom: 28px;
+    border-radius: 10px; padding: 18px 22px; margin-bottom: 24px;
   }
   .error-card.visible { display: block; }
   .error-card p { color: #E87080; font-size: 14px; line-height: 1.6; }
 
-  /* ── FOOTER ── */
-  footer {
-    text-align: center; margin-top: 60px; padding-top: 24px;
-    border-top: 1px solid var(--border);
-    font-size: 12px; color: var(--muted); line-height: 1.7;
+  /* ── LOADING ── */
+  .loading {
+    display: none; text-align: center;
+    background: var(--navy2); border: 1px solid var(--border);
+    border-radius: 12px; padding: 44px 24px; margin-bottom: 28px;
   }
-  footer span { color: var(--saffron); }
+  .loading.visible { display: block; }
+  .spinner {
+    width: 52px; height: 52px; margin: 0 auto 22px;
+    border: 3px solid var(--border); border-top-color: var(--saffron);
+    border-radius: 50%; animation: spinAnim 0.85s linear infinite;
+  }
+  @keyframes spinAnim { to { transform: rotate(360deg); } }
+  .loading p { color: var(--muted); font-size: 14px; line-height: 1.7; }
+  .loading-step { margin-top: 12px; font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--saffron); letter-spacing: 0.08em; }
 
-  @media (max-width: 600px) {
-    .form-grid { grid-template-columns: 1fr; }
-    .form-card { padding: 20px; }
+  /* ── RESULT ── */
+  .result-card { display: none; background: var(--navy2); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; }
+  .result-card.visible { display: block; }
+  .result-head {
+    background: linear-gradient(135deg, var(--burg), #2A0D1F);
+    border-bottom: 1px solid var(--border); padding: 22px 28px;
+    display: flex; align-items: center; gap: 14px;
+  }
+  .result-head .ico { font-size: 26px; }
+  .result-head h2 { font-family: 'Playfair Display', serif; font-size: 19px; color: var(--gold2); }
+  .result-head p  { font-size: 12px; color: var(--muted); margin-top: 3px; }
+  .result-body { padding: 30px; }
+
+  .section { margin-bottom: 30px; }
+  .section:last-child { margin-bottom: 0; }
+  .section-title {
+    font-family: 'Playfair Display', serif; font-size: 15px; color: var(--saffron);
+    padding-bottom: 8px; margin-bottom: 12px; border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .badge {
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    background: var(--glow); border: 1px solid var(--border);
+    border-radius: 4px; padding: 2px 7px; color: var(--gold); letter-spacing: 0.07em;
+  }
+  .section-body {
+    font-size: 14px; line-height: 1.88; color: var(--ivory2); white-space: pre-wrap;
+  }
+  .section-body strong { color: var(--ivory); }
+
+  /* ── NEW ANALYSIS BTN ── */
+  .btn-reset {
+    margin-top: 28px; width: 100%;
+    background: transparent; border: 1px solid var(--border);
+    color: var(--muted); font-family: 'Inter', sans-serif; font-size: 14px;
+    border-radius: 8px; padding: 12px; cursor: pointer; transition: color 0.2s, border-color 0.2s;
+  }
+  .btn-reset:hover { color: var(--ivory); border-color: var(--saffron); }
+
+  footer {
+    text-align: center; margin-top: 60px; padding-top: 22px;
+    border-top: 1px solid var(--border); font-size: 12px; color: var(--muted); line-height: 1.7;
+  }
+  footer em { color: var(--saffron); font-style: normal; }
+
+  @media (max-width: 560px) {
+    .upload-card, .question-card { padding: 20px; }
     .result-body { padding: 20px; }
-    .dasha-row { flex-direction: column; }
-    .question-card { padding: 20px; }
+    .upload-zone { padding: 36px 16px; }
   }
 </style>
 </head>
 <body>
 
-<!-- Mandala SVG background -->
 <svg class="mandala-bg" viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg">
   <g transform="translate(250,250)">
     <circle r="240" fill="none" stroke="#C9922A" stroke-width="1"/>
@@ -346,275 +266,190 @@
 </svg>
 
 <div class="page">
+
   <header>
-    <div class="header-eyebrow">ज्योतिष दर्शन · Vedic Astrology</div>
-    <h1>Kundli <span>Analyser</span></h1>
-    <p>Enter your birth chart details below. The analysis is grounded in classical Parashari, Jaimini, and Nadi principles — cross-referenced before each interpretation.</p>
+    <div class="eyebrow">ज्योतिष दर्शन · Vedic Astrology</div>
+    <h1>Kundli <em>Analyser</em></h1>
+    <p>Upload your Kundli PDF — all charts, degrees, and dashas are read automatically and interpreted through classical Parashari, Jaimini & Nadi principles.</p>
   </header>
 
-  <!-- API STATUS BANNER (no key input — key lives in Vercel env) -->
-  <div class="api-status" id="apiStatus">
-    <div class="dot" id="apiDot"></div>
-    <div class="api-status-text" id="apiStatusText">
-      <strong>Checking connection…</strong>
+  <!-- Connection status -->
+  <div class="status-bar">
+    <div class="dot" id="statusDot"></div>
+    <span id="statusText">Checking connection…</span>
+  </div>
+
+  <!-- Upload -->
+  <div class="upload-card">
+    <div class="upload-zone" id="dropZone">
+      <input type="file" accept="application/pdf" id="pdfInput" />
+      <div class="upload-icon">📜</div>
+      <h3>Drop your Kundli PDF here</h3>
+      <p>Or click to browse · Max 15 MB</p>
+      <div class="hint">JANAM KUNDLI · BIRTH CHART · HOROSCOPE PDF</div>
+    </div>
+
+    <div class="file-preview" id="filePreview">
+      <div class="file-icon">📄</div>
+      <div class="file-info">
+        <div class="file-name" id="fileName">—</div>
+        <div class="file-size" id="fileSize">—</div>
+      </div>
+      <button class="file-remove" onclick="removeFile()">✕ Remove</button>
+    </div>
+
+    <div class="chips">
+      <span class="chip">LAGNA CHART</span>
+      <span class="chip">NAVAMSHA D-9</span>
+      <span class="chip">MOON CHART</span>
+      <span class="chip">VIMSHOTTARI DASHA</span>
+      <span class="chip">PLANETARY DEGREES</span>
+      <span class="chip">LAL KITAB</span>
+      <span class="chip">TRANSIT CHART</span>
+      <span class="chip">BASIC DETAILS</span>
     </div>
   </div>
 
-  <!-- BIRTH DETAILS FORM -->
-  <div class="form-card">
-    <div class="form-title">ॐ Birth Details</div>
-    <div class="form-grid">
-      <div class="form-group">
-        <label>Full Name</label>
-        <input type="text" id="name" placeholder="e.g. Arjun Sharma" />
-      </div>
-      <div class="form-group">
-        <label>Date of Birth</label>
-        <input type="date" id="dob" />
-      </div>
-      <div class="form-group">
-        <label>Time of Birth</label>
-        <input type="time" id="tob" />
-      </div>
-      <div class="form-group">
-        <label>Birth Location (City, Country)</label>
-        <input type="text" id="location" placeholder="e.g. Mumbai, India" />
-      </div>
-    </div>
-
-    <!-- LAGNA CHART -->
-    <div class="section-label">Lagna Chart</div>
-    <div class="form-group">
-      <label>Planetary positions in houses (Rashi)</label>
-      <textarea id="lagnaChart" placeholder="e.g. ASC in Aries (1st), Sun in Taurus (2nd), Moon in Cancer (4th), Mars in Scorpio (8th), Mercury in Gemini (3rd), Jupiter in Sagittarius (9th), Venus in Pisces (12th), Saturn in Capricorn (10th), Rahu in Virgo (6th), Ketu in Pisces (12th)"></textarea>
-    </div>
-
-    <!-- PLANETARY DEGREES TABLE -->
-    <div class="section-label">Planetary Degrees</div>
-    <div class="planet-table-wrap">
-      <table id="planetTable">
-        <thead>
-          <tr>
-            <th>Planet</th><th>House</th><th>Rashi</th><th>Deg-Min-Sec</th>
-            <th>Lord</th><th>Nakshatra</th><th>Char.</th><th>Naks. Lord</th>
-          </tr>
-        </thead>
-        <tbody id="planetBody"></tbody>
-      </table>
-    </div>
-
-    <!-- DASHA -->
-    <div class="section-label">Vimshottari Dasha</div>
-    <div class="dasha-row">
-      <div class="dasha-group">
-        <label>Mahadasha</label>
-        <div class="form-group"><input type="text" id="mahadasha" placeholder="e.g. Saturn" /></div>
-      </div>
-      <div class="dasha-group">
-        <label>Mahadasha Period</label>
-        <div class="form-group"><input type="text" id="mahadashaPeriod" placeholder="e.g. Nov 2022 – Nov 2041" /></div>
-      </div>
-      <div class="dasha-group">
-        <label>Antardasha</label>
-        <div class="form-group"><input type="text" id="antardasha" placeholder="e.g. Saturn-Mercury" /></div>
-      </div>
-      <div class="dasha-group">
-        <label>Antardasha Period</label>
-        <div class="form-group"><input type="text" id="antardashaPeriod" placeholder="e.g. Mar 2025 – Jan 2028" /></div>
-      </div>
-      <div class="dasha-group">
-        <label>Pratyantar Dasha</label>
-        <div class="form-group"><input type="text" id="pratyantarDasha" placeholder="e.g. Sat-Mer-Ketu" /></div>
-      </div>
-      <div class="dasha-group">
-        <label>Pratyantar Period</label>
-        <div class="form-group"><input type="text" id="pratyantarPeriod" placeholder="e.g. Jun 2025 – Oct 2025" /></div>
-      </div>
-    </div>
-
-    <!-- MOON CHART -->
-    <div class="section-label">Moon Chart (Chandra Kundli)</div>
-    <div class="form-group">
-      <textarea id="moonChart" placeholder="e.g. Moon in Cancer as Lagna. Sun in 11th from Moon, Jupiter in 6th from Moon, Saturn in 4th from Moon…"></textarea>
-    </div>
-
-    <!-- NAVAMSHA -->
-    <div class="section-label">Navamsha Chart (D-9)</div>
-    <div class="form-group">
-      <textarea id="navamsha" placeholder="e.g. ASC in Gemini. Sun in Leo, Moon in Pisces, Mars in Aries, Jupiter in Capricorn (debilitated), Venus in Pisces (exalted)…"></textarea>
-    </div>
-
-    <!-- LAL KITAB -->
-    <div class="section-label">Lal Kitab Varsh Phal Chart <span style="font-size:12px;color:var(--muted);font-family:'Inter',sans-serif;">(optional)</span></div>
-    <div class="form-group">
-      <textarea id="lalKitab" placeholder="e.g. Year lord: Saturn. Sun in 3rd house, Moon in 7th house…"></textarea>
-    </div>
-
-    <!-- TRANSIT -->
-    <div class="section-label">Transit Chart (Current Gochar)</div>
-    <div class="form-group">
-      <textarea id="transitChart" placeholder="e.g. Saturn transiting Aquarius (natal 11th), Jupiter transiting Taurus (natal 2nd), Rahu in Pisces…"></textarea>
-    </div>
-
-    <!-- BASIC DETAILS -->
-    <div class="section-label">Basic Details</div>
-    <div class="details-grid">
-      <div class="detail-cell"><label>Ascendant (Lagna)</label><input type="text" id="ascendant" placeholder="e.g. Aries" /></div>
-      <div class="detail-cell"><label>Moon Sign</label><input type="text" id="moonSign" placeholder="e.g. Cancer" /></div>
-      <div class="detail-cell"><label>Nakshatra</label><input type="text" id="nakshatra" placeholder="e.g. Pushya" /></div>
-      <div class="detail-cell"><label>Namakshar</label><input type="text" id="namakshar" placeholder="e.g. हु" /></div>
-      <div class="detail-cell"><label>Lucky Number</label><input type="text" id="luckyNo" placeholder="e.g. 5, 8" /></div>
-      <div class="detail-cell"><label>Lucky Colour</label><input type="text" id="luckyCol" placeholder="e.g. Blue, Black" /></div>
-      <div class="detail-cell"><label>Lucky Days</label><input type="text" id="luckyDays" placeholder="e.g. Saturday, Wednesday" /></div>
-      <div class="detail-cell"><label>Friendly Numbers</label><input type="text" id="friendlyNos" placeholder="e.g. 1, 4, 7" /></div>
-      <div class="detail-cell"><label>Lucky Stone</label><input type="text" id="luckyStone" placeholder="e.g. Blue Sapphire" /></div>
-    </div>
-  </div>
-
-  <!-- QUESTION -->
+  <!-- Question -->
   <div class="question-card">
-    <div class="form-title" style="font-family:'Playfair Display',serif;font-size:16px;color:var(--gold2);margin-bottom:14px;border:none;padding:0;">
-      Ask a Specific Question <span style="font-size:12px;color:var(--muted);font-family:'Inter',sans-serif;font-weight:400;">(optional)</span>
-    </div>
-    <textarea id="userQuestion" placeholder="e.g. When will I get married? What is the outlook for my career in 2025–26? Should I start a business this year?"></textarea>
+    <div class="card-label">Ask a Specific Question <span>(optional)</span></div>
+    <textarea id="question" placeholder="e.g. When will I get married? What is the career outlook for 2025–26? Should I start a business this year?"></textarea>
   </div>
 
-  <!-- ANALYSE BUTTON -->
-  <button class="btn-analyse" id="analyseBtn" onclick="analyseKundli()">
+  <!-- CTA -->
+  <button class="btn-analyse" id="analyseBtn" onclick="analyse()">
     ✦ Reveal My Kundli Analysis ✦
   </button>
 
-  <!-- ERROR -->
-  <div class="error-card" id="errorCard">
-    <p id="errorMsg"></p>
-  </div>
+  <!-- Error -->
+  <div class="error-card" id="errorCard"><p id="errorMsg"></p></div>
 
-  <!-- LOADING -->
+  <!-- Loading -->
   <div class="loading" id="loading">
-    <div class="loading-spinner"></div>
-    <p>Consulting the celestial manuscript…<br/>The Jyotishi is reading your chart across all divisional perspectives.</p>
-    <div class="loading-step" id="loadingStep">Initialising planetary review…</div>
+    <div class="spinner"></div>
+    <p>Reading your celestial blueprint…<br/>The Jyotishi is scanning all charts and cross-referencing dasha timelines.</p>
+    <div class="loading-step" id="loadingStep">Extracting chart data from PDF…</div>
   </div>
 
-  <!-- RESULT -->
+  <!-- Result -->
   <div class="result-card" id="resultCard">
-    <div class="result-header">
-      <div class="result-icon">🪐</div>
+    <div class="result-head">
+      <div class="ico">🪐</div>
       <div>
         <h2>Your Vedic Analysis</h2>
-        <p id="resultSubtitle">Complete Jyotish interpretation</p>
+        <p id="resultMeta">Complete Jyotish interpretation</p>
       </div>
     </div>
     <div class="result-body" id="resultBody"></div>
+    <div style="padding: 0 30px 30px;">
+      <button class="btn-reset" onclick="resetAll()">↩ Analyse another Kundli</button>
+    </div>
   </div>
 
   <footer>
-    <p>Jyotish Darshan &nbsp;·&nbsp; Grounded in <span>Parashari · Jaimini · Nadi</span> traditions</p>
-    <p style="margin-top:6px;">For guidance only. Always consult a qualified Jyotishi for life decisions.</p>
+    <p>Jyotish Darshan · Grounded in <em>Parashari · Jaimini · Nadi</em> traditions</p>
+    <p style="margin-top:5px;">For guidance only. Consult a qualified Jyotishi for major life decisions.</p>
   </footer>
 </div>
 
 <script>
-// ── PLANET TABLE ──
-const PLANETS = [
-  'Sun','Moon','Mars','Mercury','Jupiter','Venus','Saturn','Rahu','Ketu',
-  'Ascendant (Lagna)','2nd House Cusp','10th House Cusp'
-];
+// ── STATE ──
+let selectedFile = null;
 
-function buildPlanetTable() {
-  const tbody = document.getElementById('planetBody');
-  PLANETS.forEach((p, i) => {
-    const tr = document.createElement('tr');
-    tr.innerHTML = `
-      <td style="color:var(--gold2);font-weight:500">${p}</td>
-      <td><input data-p="${i}" data-f="house"  placeholder="1-12" /></td>
-      <td><input data-p="${i}" data-f="rashi"  placeholder="Aries…" /></td>
-      <td><input data-p="${i}" data-f="deg"    placeholder='12°34\'56"' /></td>
-      <td><input data-p="${i}" data-f="lord"   placeholder="Lord" /></td>
-      <td><input data-p="${i}" data-f="naks"   placeholder="Nakshatra" /></td>
-      <td><input data-p="${i}" data-f="char"   placeholder="Char." /></td>
-      <td><input data-p="${i}" data-f="nlord"  placeholder="Naks.Lord" /></td>
-    `;
-    tbody.appendChild(tr);
-  });
-}
-buildPlanetTable();
-
-function getPlanetData() {
-  const rows = document.querySelectorAll('#planetBody tr');
-  return PLANETS.map((p, i) => {
-    const r = rows[i];
-    const g = (f) => r.querySelector(`[data-f="${f}"]`)?.value?.trim() || '';
-    return { planet: p, house: g('house'), rashi: g('rashi'), deg: g('deg'), lord: g('lord'), naks: g('naks'), char: g('char'), nlord: g('nlord') };
-  }).filter(r => r.house || r.rashi || r.deg);
-}
-
-// ── API STATUS CHECK ──
-async function checkApiStatus() {
-  const dot  = document.getElementById('apiDot');
-  const text = document.getElementById('apiStatusText');
+// ── STATUS CHECK ──
+async function checkStatus() {
+  const dot  = document.getElementById('statusDot');
+  const text = document.getElementById('statusText');
   try {
-    const res = await fetch('/api/analyse', {
+    const r = await fetch('/api/analyse', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ ping: true, systemPrompt: 'ping', userPrompt: 'ping' }),
+      body: JSON.stringify({ ping: true }),
     });
-    // A 400 or 200 both mean the function is reachable and the key is set
-    // A 500 with specific message means key is missing
-    const data = await res.json().catch(() => ({}));
-    if (res.status === 500 && data?.error?.includes('ANTHROPIC_API_KEY')) {
-      dot.className = 'dot error';
-      text.innerHTML = '<strong>API key not configured.</strong> Add <code style="color:var(--saffron)">ANTHROPIC_API_KEY</code> in your Vercel project → Settings → Environment Variables.';
+    const d = await r.json().catch(() => ({}));
+    if (d?.error?.includes('ANTHROPIC_API_KEY')) {
+      dot.className = 'dot err';
+      text.textContent = 'API key not set — add ANTHROPIC_API_KEY in Vercel → Settings → Environment Variables';
     } else {
-      dot.className = 'dot ready';
-      text.innerHTML = '<strong>Connected</strong> · Jyotish engine ready via secure server function.';
+      dot.className = 'dot ok';
+      text.textContent = 'Connected · Jyotish engine ready';
     }
   } catch {
-    dot.className = 'dot error';
-    text.innerHTML = '<strong>Cannot reach /api/analyse.</strong> Ensure the project is deployed on Vercel correctly.';
+    dot.className = 'dot err';
+    text.textContent = 'Cannot reach /api/analyse — check Vercel deployment';
   }
 }
-checkApiStatus();
+checkStatus();
+
+// ── FILE HANDLING ──
+const dropZone  = document.getElementById('dropZone');
+const pdfInput  = document.getElementById('pdfInput');
+const preview   = document.getElementById('filePreview');
+
+pdfInput.addEventListener('change', e => { if (e.target.files[0]) setFile(e.target.files[0]); });
+
+dropZone.addEventListener('dragover',  e => { e.preventDefault(); dropZone.classList.add('drag'); });
+dropZone.addEventListener('dragleave', ()  => dropZone.classList.remove('drag'));
+dropZone.addEventListener('drop', e => {
+  e.preventDefault(); dropZone.classList.remove('drag');
+  const f = e.dataTransfer.files[0];
+  if (f && f.type === 'application/pdf') setFile(f);
+  else showError('Please drop a PDF file.');
+});
+
+function setFile(f) {
+  if (f.size > 15 * 1024 * 1024) { showError('PDF is too large (max 15 MB). Try compressing it first.'); return; }
+  selectedFile = f;
+  document.getElementById('fileName').textContent = f.name;
+  document.getElementById('fileSize').textContent = (f.size / 1024).toFixed(1) + ' KB';
+  preview.classList.add('visible');
+  hideError();
+}
+
+function removeFile() {
+  selectedFile = null;
+  pdfInput.value = '';
+  preview.classList.remove('visible');
+}
 
 // ── LOADING STEPS ──
-const steps = [
-  'Reading planetary degrees and positions…',
-  'Mapping Lagna, Moon & Navamsha charts…',
-  'Correlating Vimshottari Dasha timelines…',
-  'Reviewing Lal Kitab & Transit influences…',
-  'Synthesising multi-chart interpretation…',
-  'Composing your personalised analysis…',
+const STEPS = [
+  'Extracting chart data from PDF…',
+  'Identifying planetary positions & degrees…',
+  'Reading Dasha timelines…',
+  'Analysing Navamsha & Moon chart…',
+  'Mapping transits & Lal Kitab…',
+  'Identifying yogas and planetary dignities…',
+  'Composing your personalised reading…',
 ];
 let stepIdx = 0, stepTimer;
 function startSteps() {
   stepIdx = 0;
-  document.getElementById('loadingStep').textContent = steps[0];
+  document.getElementById('loadingStep').textContent = STEPS[0];
   stepTimer = setInterval(() => {
-    stepIdx = (stepIdx + 1) % steps.length;
-    document.getElementById('loadingStep').textContent = steps[stepIdx];
-  }, 3200);
+    stepIdx = (stepIdx + 1) % STEPS.length;
+    document.getElementById('loadingStep').textContent = STEPS[stepIdx];
+  }, 3500);
 }
 function stopSteps() { clearInterval(stepTimer); }
 
-function show(id) { document.getElementById(id).classList.add('visible'); }
-function hide(id) { document.getElementById(id).classList.remove('visible'); }
-function showError(msg) { document.getElementById('errorMsg').textContent = msg; show('errorCard'); }
+// ── HELPERS ──
+const $ = id => document.getElementById(id);
+function show(id) { $(id).classList.add('visible'); }
+function hide(id) { $(id).classList.remove('visible'); }
+function showError(msg) { $('errorMsg').textContent = msg; show('errorCard'); }
+function hideError()    { hide('errorCard'); }
 
 // ── FORMAT RESULT ──
+const BADGES = ['Vedic','Extracted','Yogas','Dasha','Navamsha','Gochar','Domains','Question','Remedies','Forecast'];
 function formatAnalysis(text) {
   const sections = [];
-  const lines = text.split('\n');
   let current = null;
-  const sectionPatterns = [/^#{1,3}\s*(.+)/, /^=+\s*(.+?)\s*=+/, /^\*{2}([^*]+)\*{2}\s*$/];
-  lines.forEach(line => {
-    let header = null;
-    for (const pat of sectionPatterns) {
-      const m = line.match(pat);
-      if (m) { header = m[1].trim(); break; }
-    }
-    if (header) {
+  text.split('\n').forEach(line => {
+    const m = line.match(/^#{1,3}\s*(.+)/);
+    if (m) {
       if (current) sections.push(current);
-      current = { title: header, body: '' };
+      current = { title: m[1].trim(), body: '' };
     } else {
       if (!current) current = { title: null, body: '' };
       current.body += line + '\n';
@@ -622,194 +457,68 @@ function formatAnalysis(text) {
   });
   if (current) sections.push(current);
 
-  const badges = ['Vedic','Dasha','Transit','Navamsha','Lal Kitab','Synthesis','Remedies'];
   let html = '';
   sections.forEach((s, i) => {
     if (!s.title && !s.body.trim()) return;
-    html += `<div class="analysis-block">`;
+    html += `<div class="section">`;
     if (s.title) {
-      const badge = badges[i % badges.length];
-      html += `<div class="analysis-block-title"><span>${s.title}</span><span class="badge">${badge}</span></div>`;
+      html += `<div class="section-title"><span>${s.title}</span><span class="badge">${BADGES[i % BADGES.length]}</span></div>`;
     }
     if (s.body.trim()) {
-      const formatted = s.body
+      const body = s.body
         .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
         .replace(/\*(.+?)\*/g, '<em>$1</em>')
         .trim();
-      html += `<div class="analysis-content">${formatted}</div>`;
+      html += `<div class="section-body">${body}</div>`;
     }
     html += `</div>`;
   });
-  return html || `<div class="analysis-content">${text}</div>`;
+  return html || `<div class="section-body">${text}</div>`;
 }
 
-// ── SYSTEM PROMPT ──
-function buildSystemPrompt() {
-  return `You are Jyotish Darshan, an advanced Vedic astrology analysis engine grounded in classical śāstra. Before providing any interpretation, you MUST internally complete a structured multi-layer review in this exact sequence:
-
-INTERNAL REVIEW PROTOCOL (do not skip any step):
-1. CHART INTEGRITY CHECK: Verify planetary positions for astronomical consistency. Note any unusual or rare configurations (yogas, rajayogas, doshas).
-2. LAGNA ANALYSIS: Examine the Lagna (ascendant), its lord, aspects, and the overall chart strength.
-3. PLANETARY DIGNITIES: Assess each planet's dignity (exaltation, moolatrikona, own sign, neutral, debilitation), shad bala considerations, and directional strength (digbala).
-4. YOGA IDENTIFICATION: Identify all significant yogas — Dhana yoga, Raja yoga, Parivartana yoga, Neecha Bhanga, Viparita Raja yoga, Kemadruma, Gaja Kesari, etc.
-5. DASHA CORRELATION: Cross-reference the current Vimshottari Dasha/Antardasha/Pratyantar Dasha with natal promises. A dasha can only fructify what the natal chart promises.
-6. DIVISIONAL CHART SYNTHESIS: Correlate findings from D-1 (Rashi), D-9 (Navamsha), and Moon Chart. The D-9 reveals soul purpose and marriage quality; the Moon chart reveals mental/emotional patterns.
-7. TRANSIT OVERLAY: Apply current Gochar (transits) — especially Saturn, Jupiter, and the nodal axis — over natal and Moon chart positions.
-8. LAL KITAB INTEGRATION (if provided): Note Lal Kitab annual influences.
-
-NEGATIVE CONSTRAINTS — NEVER DO THESE:
-- Do NOT give definitive predictions ("you will definitely get married in 2026"). Use probabilistic language ("this period strongly favours", "the planetary configuration suggests").
-- Do NOT ignore contradictory signals in the chart — always acknowledge when factors pull in different directions.
-- Do NOT make pronouncements about life/death, severe illness, or catastrophic events.
-- Do NOT fabricate planetary positions if data is missing — state that the specific analysis is limited due to incomplete data.
-- Do NOT confuse Vedic (sidereal) positions with Western (tropical) positions. Always treat input as Vedic sidereal unless stated otherwise.
-- Do NOT give generic horoscope content — every statement must be traceable to specific chart factors named explicitly.
-- Do NOT advise on medical treatments, legal matters, or financial investments in specific terms.
-- Do NOT skip the multi-layer review — depth and accuracy depend on it.
-- Do NOT produce output shorter than 800 words — a genuine Jyotish reading requires thorough examination.
-
-OUTPUT FORMAT:
-Structure your response in clear sections using ## headers:
-## Chart Overview & Lagna Analysis
-## Planetary Strengths & Key Yogas
-## Current Dasha Analysis
-## Divisional Chart Insights (Navamsha & Moon Chart)
-## Transit Influences (Gochar)
-## Life Domain Analysis (Career, Relationships, Health, Finances — based on chart emphasis)
-## Specific Question Analysis (only if a question was asked)
-## Remedial Measures (Upayas)
-## Summary & Key Periods Ahead
-
-Write in warm, authoritative Jyotish language. Be specific — cite exact planets, houses, and rashis in your analysis. Acknowledge complexity where it exists.`;
-}
-
-// ── USER PROMPT ──
-function buildUserPrompt(data) {
-  const pd = getPlanetData();
-  const planetTable = pd.length > 0
-    ? pd.map(p => `${p.planet}: House ${p.house}, ${p.rashi}, ${p.deg}, Lord: ${p.lord}, Nakshatra: ${p.naks} (${p.char}), Naks.Lord: ${p.nlord}`).join('\n')
-    : 'Not provided';
-
-  return `Please analyse the following Kundli using the complete multi-layer Vedic review protocol.
-
-═══ BIRTH INFORMATION ═══
-Name: ${data.name || 'Not provided'}
-Date of Birth: ${data.dob || 'Not provided'}
-Time of Birth: ${data.tob || 'Not provided'}
-Place of Birth: ${data.location || 'Not provided'}
-
-═══ LAGNA CHART ═══
-${data.lagnaChart || 'Not provided'}
-
-═══ PLANETARY DEGREES (Sidereal/Vedic) ═══
-${planetTable}
-
-═══ VIMSHOTTARI DASHA ═══
-Mahadasha: ${data.mahadasha || 'Not provided'} (${data.mahadashaPeriod || 'period unknown'})
-Antardasha: ${data.antardasha || 'Not provided'} (${data.antardashaPeriod || 'period unknown'})
-Pratyantar Dasha: ${data.pratyantarDasha || 'Not provided'} (${data.pratyantarPeriod || 'period unknown'})
-
-═══ MOON CHART (CHANDRA KUNDLI) ═══
-${data.moonChart || 'Not provided'}
-
-═══ NAVAMSHA CHART (D-9) ═══
-${data.navamsha || 'Not provided'}
-
-═══ LAL KITAB VARSH PHAL ═══
-${data.lalKitab || 'Not provided'}
-
-═══ TRANSIT CHART (CURRENT GOCHAR) ═══
-${data.transitChart || 'Not provided'}
-
-═══ BASIC DETAILS ═══
-Ascendant: ${data.ascendant || 'Not provided'}
-Moon Sign: ${data.moonSign || 'Not provided'}
-Nakshatra: ${data.nakshatra || 'Not provided'}
-Namakshar: ${data.namakshar || 'Not provided'}
-Lucky Number: ${data.luckyNo || 'Not provided'}
-Lucky Colour: ${data.luckyCol || 'Not provided'}
-Lucky Days: ${data.luckyDays || 'Not provided'}
-Friendly Numbers: ${data.friendlyNos || 'Not provided'}
-Lucky Stone: ${data.luckyStone || 'Not provided'}
-
-${data.question ? `═══ SPECIFIC QUESTION FROM NATIVE ═══\n${data.question}` : ''}
-
-Please now conduct the full Jyotish analysis as per the protocol. Be thorough, specific, and grounded in the chart data provided.`;
-}
-
-// ── MAIN ANALYSIS ──
-async function analyseKundli() {
-  hide('errorCard');
+// ── MAIN ──
+async function analyse() {
+  hideError();
   hide('resultCard');
 
-  const data = {
-    name:            document.getElementById('name').value.trim(),
-    dob:             document.getElementById('dob').value,
-    tob:             document.getElementById('tob').value,
-    location:        document.getElementById('location').value.trim(),
-    lagnaChart:      document.getElementById('lagnaChart').value.trim(),
-    mahadasha:       document.getElementById('mahadasha').value.trim(),
-    mahadashaPeriod: document.getElementById('mahadashaPeriod').value.trim(),
-    antardasha:      document.getElementById('antardasha').value.trim(),
-    antardashaPeriod:document.getElementById('antardashaPeriod').value.trim(),
-    pratyantarDasha: document.getElementById('pratyantarDasha').value.trim(),
-    pratyantarPeriod:document.getElementById('pratyantarPeriod').value.trim(),
-    moonChart:       document.getElementById('moonChart').value.trim(),
-    navamsha:        document.getElementById('navamsha').value.trim(),
-    lalKitab:        document.getElementById('lalKitab').value.trim(),
-    transitChart:    document.getElementById('transitChart').value.trim(),
-    ascendant:       document.getElementById('ascendant').value.trim(),
-    moonSign:        document.getElementById('moonSign').value.trim(),
-    nakshatra:       document.getElementById('nakshatra').value.trim(),
-    namakshar:       document.getElementById('namakshar').value.trim(),
-    luckyNo:         document.getElementById('luckyNo').value.trim(),
-    luckyCol:        document.getElementById('luckyCol').value.trim(),
-    luckyDays:       document.getElementById('luckyDays').value.trim(),
-    friendlyNos:     document.getElementById('friendlyNos').value.trim(),
-    luckyStone:      document.getElementById('luckyStone').value.trim(),
-    question:        document.getElementById('userQuestion').value.trim(),
-  };
+  if (!selectedFile) { showError('Please upload your Kundli PDF first.'); return; }
 
-  if (!data.dob && !data.lagnaChart && !data.ascendant) {
-    showError('Please fill in at least the Date of Birth and either the Lagna Chart or Ascendant to begin analysis.');
-    return;
-  }
+  // Convert PDF to base64
+  const base64 = await new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload  = () => resolve(reader.result.split(',')[1]);
+    reader.onerror = () => reject(new Error('Failed to read PDF file.'));
+    reader.readAsDataURL(selectedFile);
+  });
 
-  const btn = document.getElementById('analyseBtn');
+  const question = $('question').value.trim();
+
+  const btn = $('analyseBtn');
   btn.disabled = true;
-  btn.textContent = '⏳ Consulting the stars…';
+  btn.textContent = '⏳ Reading your stars…';
   show('loading');
   startSteps();
 
   try {
-    // ▶ API call goes to /api/analyse — key never touches the browser
-    const response = await fetch('/api/analyse', {
+    const res = await fetch('/api/analyse', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        systemPrompt: buildSystemPrompt(),
-        userPrompt:   buildUserPrompt(data),
-      }),
+      body: JSON.stringify({ pdfBase64: base64, question }),
     });
 
-    const result = await response.json();
+    const data = await res.json();
+    if (!res.ok) throw new Error(data?.error || `Server error ${res.status}`);
 
-    if (!response.ok) {
-      throw new Error(result?.error || `Server error ${response.status}`);
-    }
-
-    const text = result?.analysis || '';
-    if (!text) throw new Error('No analysis received. Please try again.');
+    const text = data?.analysis || '';
+    if (!text) throw new Error('Empty response from the analysis engine. Please try again.');
 
     stopSteps();
     hide('loading');
 
-    const subtitle = [data.name, data.dob, data.ascendant ? `Lagna: ${data.ascendant}` : '']
-      .filter(Boolean).join(' · ');
-    document.getElementById('resultSubtitle').textContent = subtitle || 'Vedic Jyotish interpretation';
-    document.getElementById('resultBody').innerHTML = formatAnalysis(text);
+    $('resultMeta').textContent = selectedFile.name.replace('.pdf', '') + ' · Vedic Jyotish interpretation';
+    $('resultBody').innerHTML = formatAnalysis(text);
     show('resultCard');
-    document.getElementById('resultCard').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    $('resultCard').scrollIntoView({ behavior: 'smooth', block: 'start' });
 
   } catch (err) {
     stopSteps();
@@ -819,6 +528,14 @@ async function analyseKundli() {
     btn.disabled = false;
     btn.textContent = '✦ Reveal My Kundli Analysis ✦';
   }
+}
+
+function resetAll() {
+  removeFile();
+  $('question').value = '';
+  hide('resultCard');
+  hideError();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 </script>
 </body>
